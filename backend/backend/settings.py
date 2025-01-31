@@ -30,6 +30,11 @@ ALLOWED_HOSTS = []
 
 AUTH_USER_MODEL = 'base.MyUser'
 
+SIMPLE_JWT = {
+    "USER_ID_FIELD": "username",
+    # "USER_ID_FIELD": "id",
+}
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -42,7 +47,15 @@ INSTALLED_APPS = [
     'rest_framework',
     'base',
     'corsheaders',
+    'rest_framework_simplejwt',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        # for login refesh token
+    )
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -56,7 +69,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
+    "http://localhost:5173",
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
