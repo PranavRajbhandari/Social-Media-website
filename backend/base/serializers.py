@@ -1,6 +1,23 @@
-from .models import MyUser
+from .models import MyUser, Post
 from rest_framework import serializers
 
+
+class UserRegisterSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+    class Meta:
+        model = MyUser
+        fields = ['username', 'email','first_name','last_name','password']
+
+    def create(self,validated_data):
+        user = MyUser(
+            email = validated_data['email'],
+            username = validated_data['username'],
+            first_name = validated_data['first_name'],
+            last_name = validated_data['last_name'],
+        )
+        user.set_password(validated_data['password'])
+        user.save()
+        return user
 
 class MyUserProfileSerializer(serializers.ModelSerializer):
     follower_count = serializers.SerializerMethodField()
@@ -15,3 +32,20 @@ class MyUserProfileSerializer(serializers.ModelSerializer):
     
     def get_following_count(self, obj): 
         return obj.following.count()
+    
+class PostSerializer(serializers.ModelSerializer):
+    username = serializers.SerializerMethodField()
+    likes_count = serializers.SerializerMethodField()
+    formatted_date = serializers.SerializerMethodField()
+    class Meta:
+        model = Post
+        fields = ['username','description','formatted_date','likes','likes_count']
+    
+    def get_username(self,obj):
+        return obj.user.username
+    
+    def get_likes_count(self,obj):
+        return obj.likes.count()
+    
+    def get_formatted_date(self,obj):
+        return obj.created_at.strftime("%d %b %y")
