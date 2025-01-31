@@ -4,7 +4,7 @@ from rest_framework import serializers
 
 class MyUserProfileSerializer(serializers.ModelSerializer):
     follower_count = serializers.SerializerMethodField()
-    follower_count = serializers.SerializerMethodField()
+    following_count = serializers.SerializerMethodField()
 
     class Meta:
         model = MyUser
